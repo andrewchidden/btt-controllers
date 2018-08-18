@@ -1,0 +1,7 @@
+# macOS
+.DS_Store
+
+# Development
+private/
+plain-text-passwords/
+hi-there-why-are-you-looking-at-my-gitignore/
