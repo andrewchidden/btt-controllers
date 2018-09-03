@@ -46,7 +46,7 @@ function mock_killed_pids() {
 
 # $1: Process identifier to check.
 function verify_service_start() {
-	if [[ ( -z "${pid}" ) || ( -z "$(ps -p${pid} -o 'pid=')" ) ]]; then
+	if [[ ( -z "$1" ) || ( -z "$(ps -p$1 -o 'pid=')" ) ]]; then
 		exit 1
 	fi
 }

@@ -1,8 +1,8 @@
 #!/bin/bash
 
 #####
-# DESCRIPTION: Initializes service file system dependencies checks that the 
-# services are running based on pid. If a service is not running it is
+# DESCRIPTION: Initializes service file system dependencies and checks that 
+# the services are running based on pid. If a service is not running it is
 # restarted and its pid saved to disk.
 #
 # INSTALLATION: Turn on BetterTouchTool's integrated web server under 
@@ -55,8 +55,9 @@ function setup_service() {
 	touch "${service_pid_filepath}"
 
 	service_pid="$(cat ${service_pid_filepath})"
-	if [[ ( -z "${service_pid}" ) || ( -z "$(ps -p${service_pid} -o 'pid=')" ) ]]; then
-		echo "${service_cli_args[@]}"
+	if [[ ( -z "${service_pid}" ) || \
+	      ( -z "$(ps -p ${service_pid} -o 'pid=')" ) || \
+	      ( -z "$(ps aux | grep ${service_cli_filepath} | grep -v grep)" ) ]]; then
 		# Start new service instance and save its pid.
 		"${service_cli_filepath}" "${service_cli_args[@]}" &
 		pid=$!
@@ -68,7 +69,7 @@ function setup_service() {
 ##### volume-service runner #####
 widget_uuid='7DAAE846-1CB7-406C-AA2F-18A925E267F6'
 
-service_cli_filepath=~/bettertouchtool/control-strip/volume-service
+service_cli_filepath="${btt_usr_root}/control-strip/volume-service"
 status_directory="${btt_sys_root}/volume-service"
 status_filepath="${status_directory}/status"
 service_pid_filepath="${status_directory}/pid"
@@ -86,7 +87,7 @@ setup_service
 
 ##### eventkit-service-runner #####
 lookahead=1440 # in minutes
-widget_uuid=10331142-3579-4C40-B44F-6883F03EBC15
+widget_uuid='10331142-3579-4C40-B44F-6883F03EBC15'
 
 service_cli_filepath="${btt_usr_root}/app-region/eventkit-service"
 status_directory="${btt_sys_root}/eventkit-service"
