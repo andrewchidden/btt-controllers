@@ -31,6 +31,7 @@ git_bin_path=${2:-'git'}
 working_directory_arg=${3:-${BTT_GIT_WORKING_DIR}}
 working_directory=${working_directory_arg:-''}
 
+
 ##### @implementation #####
 if [[ -z "${working_directory}" ]]; then
 	echo 'No working directory'

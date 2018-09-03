@@ -11,9 +11,9 @@ gitdiff_controller='./app-region/gitdiff-controller.sh'
 git_mock="${btt_usr_root}/tests/mocks/gitdiff-git-mock.sh" # Passed to the controller.
 git_mock_local='./tests/mocks/gitdiff-git-mock.sh'
 test_root_directory='/tmp/btt/tests' # Passed to the controller.
-test_directory="${test_root_directory}/gitdiff-controller" # Passed to the controller.
-test_status_filepath="${test_directory}/gitdiff-controller/cached-status"
-test_diff_filepath="${test_directory}/gitdiff-controller/cached-diff"
+test_directory="${test_root_directory}/gitdiff-controller" # Passed to the controller (workspace).
+test_status_filepath="${test_root_directory}/gitdiff-controller/cached-status"
+test_diff_filepath="${test_root_directory}/gitdiff-controller/cached-diff"
 
 ##### @implementation #####
 function set_up() {
@@ -48,7 +48,7 @@ function mock_new_git_diff() {
 	mock_new_git_diff '12 files changed, 345 insertions(+), 678 deletions(-)'	
 	# When the controller is run with the Git mock
 	# Then it should return the expected status.
-	[ "$(${gitdiff_controller} ${test_directory} ${git_mock} ${test_directory})" = '12 files (+345 / −678)' ]
+	[ "$(${gitdiff_controller} ${test_root_directory} ${git_mock} ${test_directory})" = '12 files (+345 / −678)' ]
 
 	tear_down
 }
@@ -60,7 +60,7 @@ function mock_new_git_diff() {
 	mock_new_git_diff '12 files changed, 345 insertions(+)'
 	# When the controller is run with the Git mock
 	# Then it should return the expected status.
-	[ "$(${gitdiff_controller} ${test_directory} ${git_mock} ${test_directory})" = '12 files (+345 / −0)' ]
+	[ "$(${gitdiff_controller} ${test_root_directory} ${git_mock} ${test_directory})" = '12 files (+345 / −0)' ]
 
 	tear_down
 }
@@ -72,7 +72,7 @@ function mock_new_git_diff() {
 	mock_new_git_diff '12 files changed, 678 deletions(-)'
 	# When the controller is run with the Git mock
 	# Then it should return the expected status.
-	[ "$(${gitdiff_controller} ${test_directory} ${git_mock} ${test_directory})" = '12 files (+0 / −678)' ]
+	[ "$(${gitdiff_controller} ${test_root_directory} ${git_mock} ${test_directory})" = '12 files (+0 / −678)' ]
 
 	tear_down
 }
@@ -84,7 +84,7 @@ function mock_new_git_diff() {
 	mock_new_git_diff '12 files changed'
 	# When the controller is run with the Git mock
 	# Then it should return the expected status.
-	[ "$(${gitdiff_controller} ${test_directory} ${git_mock} ${test_directory})" = '12 files' ]
+	[ "$(${gitdiff_controller} ${test_root_directory} ${git_mock} ${test_directory})" = '12 files' ]
 
 	tear_down
 }
@@ -96,7 +96,7 @@ function mock_new_git_diff() {
 	mock_new_git_diff '1 file changed'
 	# When the controller is run with the Git mock
 	# Then it should return the expected status.
-	[ "$(${gitdiff_controller} ${test_directory} ${git_mock} ${test_directory})" = '1 file' ]
+	[ "$(${gitdiff_controller} ${test_root_directory} ${git_mock} ${test_directory})" = '1 file' ]
 
 	tear_down
 }
@@ -110,7 +110,7 @@ function mock_new_git_diff() {
 	mock_new_git_diff '12 files changed, 345 insertions(+), 678 deletions(-)'	
 	# When the controller is run with the Git mock
 	# Then it should return the expected status.
-	[ "$(${gitdiff_controller} ${test_directory} ${git_mock} ${test_directory})" = '12 files (+345 / −678)' ]
+	[ "$(${gitdiff_controller} ${test_root_directory} ${git_mock} ${test_directory})" = '12 files (+345 / −678)' ]
 
 	tear_down
 }
@@ -126,7 +126,7 @@ function mock_new_git_diff() {
 
 	# When the controller is run with the Git mock
 	# Then it should return the cached diff.
-	[ "$(${gitdiff_controller} ${test_directory} ${git_mock} ${test_directory})" = 'a-cached-diff' ]
+	[ "$(${gitdiff_controller} ${test_root_directory} ${git_mock} ${test_directory})" = 'a-cached-diff' ]
 
 	tear_down
 }
@@ -138,7 +138,7 @@ function mock_new_git_diff() {
 	mock_new_git_diff ''
 	# When the controller is run with the Git mock
 	# Then it should return the expected status.
-	[ "$(${gitdiff_controller} ${test_directory} ${git_mock} ${test_directory})" = 'Working tree is clean' ]
+	[ "$(${gitdiff_controller} ${test_root_directory} ${git_mock} ${test_directory})" = 'Working tree is clean' ]
 
 	tear_down
 }
@@ -152,7 +152,7 @@ function mock_new_git_diff() {
 
 	# When the controller is run with no working directory
 	local message
-	message="$(${gitdiff_controller} ${git_mock})"
+	message="$(${gitdiff_controller} ${test_root_directory} ${git_mock})"
 
 	# Then the controller should return an error message.
 	[ "${message}" = 'No working directory' ]
