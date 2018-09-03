@@ -42,6 +42,7 @@ osascript_bin_path=${6:-'osascript'}
 # Internal config.
 timerapp_directory="${btt_sys_root}/timer-app"
 timerapp_timerfile="${timerapp_directory}/timer"
+timerapp_script="${btt_usr_root}/timer-app/timer-app.scpt"
 
 mkdir -p "${timerapp_directory}"
 touch "${timerapp_timerfile}"
@@ -51,14 +52,17 @@ timer="$(cat ${timerapp_timerfile})"
 if [[ -n "${timer}" ]]; then
 	timer_components=($(echo "${timer}" | tr ' ' '\n'))
 	pid="${timer_components[0]}"
-	if [[ ( -n "${pid}" ) && ( -n "$(${ps_bin_path} -p${pid} -o 'pid=')" ) ]]; then
+	timer_script_path="${timerapp_directory}/"
+	if [[ ( -n "${pid}" ) && \
+		  ( -n "$(${ps_bin_path} -p ${pid} -o 'pid=')" ) && \
+		  ( -n "$(${ps_bin_path} aux | grep ${timerapp_script} | grep -v grep)" ) ]]; then
 		"${kill_bin_path}" -9 "${pid}"
 	fi
 fi
 
 if [[ ( -n "${duration}" ) && ( "${duration}" -gt 0 ) ]]; then
 	# Start a new timer.
-	"${osascript_bin_path}" "${btt_usr_root}/timer-app/timer-app.scpt" "${duration}" &
+	"${osascript_bin_path}" "${timerapp_script}" "${duration}" &
 	pid="$!"
 	timestamp="$(date +%s)"
 	echo "${pid} ${timestamp} ${duration}" > "${timerapp_timerfile}"

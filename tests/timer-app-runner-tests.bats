@@ -8,6 +8,7 @@
 ##### @interface #####
 btt_usr_root=${BTT_USR_ROOT:-~/bettertouchtool}
 timer_runner='./timer-app/timer-app-runner.sh'
+timerapp_script="${btt_usr_root}/timer-app/timer-app.scpt"
 timer_kill_mock='./tests/mocks/timer-kill-mock.sh'
 timer_ps_mock='./tests/mocks/timer-ps-mock.sh'
 timer_osascript_mock='./tests/mocks/timer-osascript-mock.sh'
@@ -44,7 +45,7 @@ function tear_down() {
 	local timer_components
 	timer_components=($(echo "${timer}" | tr ' ' '\n'))
 	local pid="${timer_components[0]}"
-	if [[ ( -n "${pid}" ) && ( -n "$(ps -p${pid} -o 'pid=')" ) ]]; then
+	if [[ ( -n "${pid}" ) && ( -n "$(ps -p ${pid} -o 'pid=')" ) ]]; then
 		kill -9 "${pid}"
 	fi
 
@@ -62,12 +63,12 @@ function verify_new_timer_started() {
 	local pid="${timer_components[0]}"
 	[[ -n "${pid}" ]]
 	[[ "${pid}" != "${timer_mock_pid}" ]]
-	[[ -n "$(ps -p${pid} -o 'pid=')" ]]
+	[[ -n "$(ps -p ${pid} -o 'pid=')" ]]
 }
 
 # $1: Timer process identifier to check if killed.
 function verify_timer_killed() {
-	[[ -z "$(ps -p$1 -o 'pid=')" ]]
+	[[ -z "$(ps -p $1 -o 'pid=')" ]]
 }
 
 # $1: Timer process identifier to mock.
@@ -76,6 +77,7 @@ function mock_timer() {
 	pid="$1"
 	duration="$2"
 	export BTT_TEST_MOCKED_TIMER_PID="${pid}"
+	export BTT_TEST_MOCKED_TIMER_PS_AUX="${timerapp_script}"
 	export BTT_TEST_MOCKED_TIMER_DURATION="${duration}"
 	local now
 	now="$(date +%s)"
