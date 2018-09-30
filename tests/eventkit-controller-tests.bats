@@ -29,10 +29,10 @@ function tear_down() {
 
 	# Given the status is non-empty
 	local expected_message='Some meeting in 3.1 hrs'
-	echo "$expected_message" > "${test_status_filepath}"
+	echo "${expected_message}" > "${test_status_filepath}"
 	# When the controller is run
 	local message
-	message="$($eventkit_controller ${test_status_root_directory})"
+	message="$(${eventkit_controller} ${test_status_root_directory})"
 	# Then it should be the same non-empty status.
 	[ "${message}" = "${expected_message}" ]
 
@@ -44,11 +44,11 @@ function tear_down() {
 
 	# Given the status is too long
 	local message='Some long meeting name that does not fit in 3.1 hrs'
-	local expected_result='Some long meeti... fit in 3.1 hrs'
-	echo "$message" > "${test_status_filepath}"
+	local expected_result='Some long meeti… fit in 3.1 hrs'
+	echo "${message}" > "${test_status_filepath}"
 	# When the controller is run
 	local message
-	message="$($eventkit_controller ${test_status_root_directory})"
+	message="$(${eventkit_controller} ${test_status_root_directory})"
 	# Then it should be the same with three dots in between
 	# the first and last 15 characters
 	[ "${message}" = "${expected_result}" ]
@@ -63,7 +63,7 @@ function tear_down() {
 	echo '' > "${test_status_filepath}"
 	# When the controller is run
 	local message
-	message="$($eventkit_controller ${test_status_root_directory})"
+	message="$(${eventkit_controller} ${test_status_root_directory})"
 	# Then the controller should return an error message.
 	[ "${message}" = 'Calendar error' ]
 

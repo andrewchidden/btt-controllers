@@ -23,7 +23,7 @@ status_filepath="${status_directory}/status"
 
 current_status="$(cat ${status_filepath})"
 if [[ -n "${current_status}" ]]; then
-	echo "${current_status}" | awk "{str = \$0; if (length > 33) print substr(str, 1, 15) \"...\" substr(str, length - 14, 15); else print str}"
+	echo "${current_status}" | awk "{str = \$0; if (length > 33) print substr(str, 1, 15) \"…\" substr(str, length - 14, 15); else print str}"
 else
 	echo 'Calendar error'
 fi
