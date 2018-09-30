@@ -42,14 +42,15 @@ function tear_down() {
 @test 'message equals long status' {
 	set_up
 
-	# Given the status is non-empty
+	# Given the status is too long
 	local message='Some long meeting name that does not fit in 3.1 hrs'
 	local expected_result='Some long meeti... fit in 3.1 hrs'
 	echo "$message" > "${test_status_filepath}"
 	# When the controller is run
 	local message
 	message="$($eventkit_controller ${test_status_root_directory})"
-	# Then it should be the same non-empty status.
+	# Then it should be the same with three dots in between
+	# the first and last 15 characters
 	[ "${message}" = "${expected_result}" ]
 
 	tear_down
