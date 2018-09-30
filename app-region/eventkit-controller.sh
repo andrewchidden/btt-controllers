@@ -11,7 +11,7 @@
 
 
 ##### @interface #####
-# Optionally set the `BTT_SYS_ROOT` environment variable to the internal system 
+# Optionally set the `BTT_SYS_ROOT` environment variable to the internal system
 # folder used by services to save and share state. Defaults to `~/.btt`
 sys_root_arg=${1:-${BTT_SYS_ROOT}}
 btt_sys_root=${sys_root_arg:-~/.btt}
@@ -23,7 +23,7 @@ status_filepath="${status_directory}/status"
 
 current_status="$(cat ${status_filepath})"
 if [[ -n "${current_status}" ]]; then
-	echo "${current_status}"
+	echo "${current_status}" | awk "{str = \$0; if (length > 33) print substr(str, 1, 15) \"...\" substr(str, length - 14, 15); else print str}"
 else
 	echo 'Calendar error'
 fi
