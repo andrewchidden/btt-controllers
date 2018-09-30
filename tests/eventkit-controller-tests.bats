@@ -39,6 +39,22 @@ function tear_down() {
 	tear_down
 }
 
+@test 'message equals long status' {
+	set_up
+
+	# Given the status is non-empty
+	local message='Some long meeting name that does not fit in 3.1 hrs'
+	local expected_result='Some long meeti... fit in 3.1 hrs'
+	echo "$message" > "${test_status_filepath}"
+	# When the controller is run
+	local message
+	message="$($eventkit_controller ${test_status_root_directory})"
+	# Then it should be the same non-empty status.
+	[ "${message}" = "${expected_result}" ]
+
+	tear_down
+}
+
 @test 'error message for empty status' {
 	set_up
 
