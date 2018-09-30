@@ -39,19 +39,34 @@ function tear_down() {
 	tear_down
 }
 
-@test 'message equals long status' {
+@test 'truncates middle of long status' {
 	set_up
 
 	# Given the status is too long
 	local message='Some long meeting name that does not fit in 3.1 hrs'
-	local expected_result='Some long meeti… fit in 3.1 hrs'
+	local expected_result='Some long meeting na…s not fit in 3.1 hrs'
 	echo "${message}" > "${test_status_filepath}"
 	# When the controller is run
 	local message
-	message="$(${eventkit_controller} ${test_status_root_directory})"
-	# Then it should be the same with three dots in between
-	# the first and last 15 characters
+	message="$(${eventkit_controller} ${test_status_root_directory} 40)"
+	# Then it should be the same message but truncated using an ellipsis 
+	# unicode character in the middle.
 	[ "${message}" = "${expected_result}" ]
+
+	tear_down
+}
+
+@test 'does not truncate status equal to max length' {
+	set_up
+
+	# Given the status is equal to the max length specified
+	local expected_message='Some long meeting name that d in 3.1 hrs'
+	echo "${expected_message}" > "${test_status_filepath}"
+	# When the controller is run
+	local message
+	message="$(${eventkit_controller} ${test_status_root_directory} 40)"
+	# Then it should not add the ellipsis unicode character or truncate.
+	[ "${message}" = "${expected_message}" ]
 
 	tear_down
 }
